@@ -1,0 +1,88 @@
+/*login, user setting button css*/
+.menuList {
+    width: 100%;
+
+    list-style: none; /*점 제거*/
+    padding-left: 0px; /*점이 있는 공간 제거*/
+
+    margin: 0px;
+}
+.menuBtn {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    display: inline-block; /*왼쪽에서 오른쪽으로 쌓이게 하는 것*/
+
+    background-color: #002366;
+    border: 1px solid whitesmoke;
+    border-radius: 1rem;
+}
+
+.menuBtn:hover {
+    text-decoration: underline;
+}
+
+/*route button css*/
+.routeList {
+    width: 100%;
+
+    list-style: none; /*점 제거*/
+    padding-left: 0px; /*점이 있는 공간 제거*/
+
+    background-color: white;
+    border-radius: 1rem;
+    
+}
+
+.routeBtn {
+    cursor:pointer;
+    text-align: center;
+
+    border: 1px solid #444444;
+    border-radius: 1rem;
+    
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.routeBtn:hover {
+    text-decoration: underline;
+}
+
+.routeBtn sup {
+    font-style: italic;
+    color: grey;
+}
+
+/* Media Query 를 사용한 휴대폰, 데스크탑 표현 구분 */
+@media screen and (orientation : landscape) {/*가로모드*/
+    header .box {
+        width: 30%;
+        float: left;
+    }
+    main .box {
+        width: 30%;
+        float: left;
+    }
+
+    .routeBtn {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (orientation : portrait) { /*세로모드*/
+    header .box {
+        float: left;
+    }
+    main .box {
+        float: left;
+    }
+    
+    .routeBtn {
+        font-size: 1.5rem;
+    }
+}

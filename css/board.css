@@ -1,0 +1,85 @@
+/*login, user setting button css*/
+.menuList {
+    width: 100%;
+
+    list-style: none; /*점 제거*/
+    padding-left: 0px; /*점이 있는 공간 제거*/
+
+    margin: 0px;
+}
+.menuBtn {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    display: inline-block; /*왼쪽에서 오른쪽으로 쌓이게 하는 것*/
+
+    background-color: #002366;
+    border: 1px solid whitesmoke;
+    border-radius: 1rem;
+}
+
+.menuBtn:hover {
+    text-decoration: underline;
+}
+
+.postBtn {
+    cursor:pointer;
+    
+}
+
+.postBtn:hover {
+    text-decoration: underline;
+}
+
+.divMain {
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+
+    margin-top: 1rem;
+}
+
+.dateForm {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.writeBtn {
+    float: right;
+
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Media Query 를 사용한 휴대폰, 데스크탑 표현 구분 */
+@media screen and (orientation : landscape) {/*가로모드*/
+    header .box {
+        width: 30%;
+        float: left;
+    }
+    main .box {
+        width: 30%;
+        float: left;
+    }
+
+    .divMain {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (orientation : portrait) { /*세로모드*/
+    header .box {
+        float: left;
+    }
+    main .box {
+        float: left;
+    }
+    
+    .divMain {
+        font-size: 1.8rem;
+    }
+}

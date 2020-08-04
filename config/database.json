@@ -1,0 +1,6 @@
+{
+    "host"     : "localhost",
+    "user"     : "taxi",
+    "password" : "taxi3306",
+    "database" : "ride_togather"
+}

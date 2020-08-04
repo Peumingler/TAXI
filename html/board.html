@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+
+        <!-- Bootstrap CDN -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3./css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
+        <!-- custom library -->
+        <link rel="shortcut icon" href="./favicon.ico">
+        <link rel="icon" href="./favicon.ico">
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/board.css">
+        <script src="/js/board.js"></script>
+
+        <title>가치타자</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <!-- 로그인, 내 정보 관리 버튼 -->
+            <nav class="box-container">
+                <div class="box"></div>
+                    <ul class="menuList">
+                        <li class="menuBtn">회원설정</li>
+                        <li class="menuBtn" onclick="location.href='/login.jsp'">로그아웃</li>
+                    </ul>
+                <div class="box"></div>
+            </nav>
+        </header>
+        <main class="box-container">
+            <div class="box"></div>
+            <!-- 날짜 선택기 -->
+            <div class="divMain">
+                <form action="/board.jsp" method="get">
+                    <p>
+                        <select id="years" name="year" style="width: 100px">
+                        </select>
+    
+                        <select id="months" name="month" style="width: 80px;" onchange="monthChangeDetect()">
+                        </select>
+    
+                        <select id="days" name="day" style="width: 80px;">
+                        </select>
+                        <input type="submit" value="검색"/>
+                    </p>
+                </form>
+                
+                <!-- select 옵션 추가 -->
+                <script>
+                    addSelectOption();
+                </script>
+                
+                <!-- 포스트 리스트 -->
+                <table class="table table-striped">
+                    <thead>
+                        <th>시각</th>
+                        <th>게시자</th>
+                        <th>현재 인원</th>
+                    </thead>
+                    <tbody>
+                        <tr class="postBtn" onclick="location.href='/post.jsp?post_id=2'">
+                            <td>2020년 9월 3일 17:40</td>
+                            <td>구라에이스</td>
+                            <td>2/3</td>
+                            <td></td>
+                        </tr>
+                        <tr class="postBtn">
+                            <td>2020년 2월 4일 17:50</td>
+                            <td>김태영</td>
+                            <td>1/3</td>
+                        </tr>
+                        <tr class="postBtn">
+                            <td>2020년 3월 4일 17:50</td>
+                            <td>김예본</td>
+                            <td>1/3</td>
+                        </tr>
+                        <tr class="postBtn">
+                            <td>2020년 4월 4일 17:50</td>
+                            <td>햇살아침</td>
+                            <td>2/3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box"></div>
+        </main>
+        <footer>
+            
+        </footer>
+    </body>
+</html>

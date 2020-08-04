@@ -1,0 +1,63 @@
+.login {
+    width: 100%;
+
+    background-color: white;
+    border-radius: 1rem;
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.login .input {
+    width: 100%;
+}
+
+.login .label {
+    font-size: 1.5rem;
+}
+
+.login #submit {
+    width: 20rem;
+    background-color: #002366;
+    color: white;
+    cursor: pointer;
+
+    display: inline-block;
+
+    font-size: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.userType {
+    display: inline-block;
+}
+
+/* Media Query 를 사용한 휴대폰, 데스크탑 표현 구분 */
+@media screen and (orientation : landscape) {/*가로모드*/
+    header .box {
+        width: 30%;
+        float: left;
+    }
+    main .box {
+        width: 30%;
+        float: left;
+    }
+    
+    .input {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (orientation : portrait) { /*세로모드*/
+    header .box {
+        float: left;
+    }
+    main .box {
+        float: left;
+    }
+
+    .input {
+        font-size: 1.3rem;
+    }
+}
