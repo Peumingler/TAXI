@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+        <link rel="shortcut icon" href="/image/favicon.ico">
+        <link rel="icon" href="/image/favicon.ico">
+        <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/index.css">
+        <title>가치타자</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <!-- 로그인, 내 정보 관리 버튼 -->
+            <nav class="box-container">
+                <div class="box"></div>
+                    <ul class="menuList">
+                        <li class="menuBtn">회원설정</li>
+
+                        <%# 로그인 버튼 %>
+                        <% if (userNo) { %>
+                            <li class="menuBtn" onclick="location.href='/auth/logout'">로그아웃</li>
+                        <% } else { %>
+                            <li class="menuBtn" onclick="location.href='/auth/login'">로그인 / 회원가입</li>
+                        <% } %>
+
+                    </ul>
+                <div class="box"></div>
+            </nav>
+        </header>
+        <!-- 노선 목록 -->
+        <main class="box-container">
+            <div class="box"></div>
+            <ul class="routeList">
+
+                <%# routes list %>
+                <% for(let i = 0; i < routeList.length; i++) { %>
+                <%     let routeNo = routeList[i]['route_no']; %>
+                <%     let departureName = routeList[i]['departure_name']; %>
+                <%     let destinationName = routeList[i]['destination_name']; %>
+                    <li class="routeBtn" onclick="location.href='/route/<%=routeNo%>/postlist'">
+                        <sup>출발지</sup> <%=departureName%> <br><sup>목적지</sup> <%=destinationName%>
+                    </li>
+                <% } %>
+
+            </ul>
+            <div class="box"></div>
+        </main>
+        <footer>
+
+        </footer>
+    </body>
+</html>

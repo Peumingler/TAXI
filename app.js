@@ -1,6 +1,5 @@
 /* Library */
 const express = require('express');
-const html = require('./html/template');
 const query = require('./lib/query');
 
 const app = express();
@@ -13,6 +12,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const flash = require('connect-flash');
 
 /* Middle Ware Apply */
+app.set('view engine', 'ejs'); //view engine ejs apply
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -42,9 +43,9 @@ app.use('/image', express.static('./images'));
 app.get('/', (req, res, next) => {
     let userNo = req.user;
 
-    query.get_route_list((err, result) => {
+    query.get_route_list((err, routeList) => {
         if(!err) {
-            res.send(html.INDEX(userNo, result));
+            res.render('route_list', {userNo: userNo, routeList: routeList});
         }
     });
 });
@@ -96,25 +97,24 @@ app.get('/route/:routeNumber/postlist/', (req, res, next) => {
     let selectedDate = year + month + day; //선택된 날짜 YYYYMMDD  string 형식
 
     //모집글 리스트 가져오기
-    query.get_post_list(routeNo, selectedDate, (err, postlist) => {
+    query.get_post_list(routeNo, selectedDate, (err, postList) => {
         if(err) {
             console.error("Postlist Error : get_post_list Error");
-            res.status(500).send("Server Error.");
+            next(err);
             return;
         }
-        res.send(html.POSTLIST(userNo, routeNo, postlist));
+        res.render('post_list', {userNo: userNo, routeNo: routeNo, postList});
     });
 });
 
-//POST 본문
+//post 보기
 app.get('/route/:routeNumber/post/:postNumber', (req, res, next) => {
     if(!req.user) { //로그인 체크
         res.redirect("/auth/login");
         return;
     }
-    let userNo = req.user;
-    let routeNo = req.params.routeNumber;
-    let postNo = req.params.postNumber;
+    let user = new query.User(req.user);
+    let post = new query.Post(req.params.postNumber);
 
     //template에 넘겨줄 데이터들
     let isAttended;
@@ -126,34 +126,55 @@ app.get('/route/:routeNumber/post/:postNumber', (req, res, next) => {
     let specificLoc;
 
     //모집글 데이터 얻기
-    query.get_post(postNo, (err, postData) => {
+    post.get_data((err, postData) => {
         if(err) {
-            res.status(500).send("Server Error.");
+            next(err);
             return;
         }
 
         //게시글 주인인지 확인
         isOwner = false;
-        if(userNo === postData['owner_user_no']) {
+        if(user.userId === postData['owner_user_no']) {
             isOwner = true;
         }
         
         time = postData['reservation_time'];
         specificLoc = postData['specific_loc'];
         //참가자 이름 얻기
-        query.get_attender(postNo, (err, data) => {
+        query.get_attender(post.postId, (err, data) => {
+            if(err) {
+                next(err);
+                return;
+            }
             isAttended = false;
             for(let i = 0; i < data.length; i++ ) {
-                if(userNo === data[i]['attender_user_no']) {
+                if(user.userId === data[i]['attender_user_no']) {
                     isAttended = true;
                 }
                 attenders.push(data[i]['attender_user_name']);
             }
             //출발지 도착지 얻기
-            query.get_route(routeNo, (err, routeData) => {
+            query.get_route_data(post.routeId, (err, routeData) => {
+                if(err) {
+                    next(err);
+                    return;
+                }
+                console.log(routeData);
                 departure = routeData['departure_name'];
                 destination = routeData['destination_name'];
-                res.send(html.POST(userNo, postNo, isAttended, isOwner, attenders, departure, destination, time, specificLoc));
+                
+                let data = {
+                    userNo: user.userId,
+                    postNo: post.postId,
+                    isAttended: isAttended,
+                    isOwner: isOwner,
+                    attenders: attenders,
+                    departure: departure,
+                    destination: destination,
+                    time: time,
+                    specificLoc: specificLoc
+                }
+                res.render('post', data);
             });
         }); 
     });
@@ -165,15 +186,15 @@ app.get('/route/:routeNumber/post/:postNumber/attend', (req, res, next) => {
         res.redirect("/auth/login");
         return;
     }
-    let userNo = req.user;
-    let postNo = req.params.postNumber;
+    let user = new query.User(req.user); //TODO req.user에 User 객체를 직접 넣도록 변경
+    let post = new query.Post(req.params.postNumber);
 
-    query.get_userData(userNo, (err, userData) => {
+    user.get_userData((err, userData) => {
         let username = userData['username'];
 
-        query.set_attender(postNo, userNo, username, (err, result) => {
+        post.set_attender(req.user, username, (err, result) => {
             if(err) {
-                res.status(500).send("Server Error.");
+                next(err);
                 return;
             }
             else if(result === true) {
@@ -182,7 +203,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend', (req, res, next) => {
             else if(result === false) {
                 console.log("false use flash");
             }
-            res.redirect(`../${postNo}`);
+            res.redirect(`../${post.postId}`);
         });
     });
 });
@@ -194,12 +215,12 @@ app.get('/route/:routeNumber/post/:postNumber/attend_cancel', (req, res, next) =
         return;
     }
 
-    let userNo = req.user;
-    let postNo = req.params.postNumber;
+    let user = new query.User(req.user);
+    let post = new query.Post(req.params.postNumber);
 
-    query.del_attender(postNo, userNo, (err, result) => {
+    post.del_attender(user.userId, (err, result) => {
         if(err) {
-            res.status(500).send("Server Error.");
+            next(err);
             return;
         }
         else if(result === true) {
@@ -208,7 +229,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend_cancel', (req, res, next) =
         else if(result === false) {
             console.log("false use flash at attend_cancel");
         }
-        res.redirect(`../${postNo}`);
+        res.redirect(`../${post.postId}`);
     });
 });
 
@@ -220,9 +241,8 @@ app.get('/route/:routeNumber/write', (req, res, next) => {
         return;
     }
 
-    let userNo = req.user;
     let routeNo = req.params.routeNumber;
-    res.send(html.WRITE(userNo, routeNo));
+    res.render('write_post',{routeNo: routeNo});
 });
 
 //POST 생성 프로세스
@@ -232,30 +252,28 @@ app.post('/route/:routeNumber/write/process', (req, res, next) => {
         return;
     }
 
-    let userNo = req.user;
-    let routeNo = req.params.routeNumber;
+    let user = new query.User(req.user);
+    let routeId = req.params.routeNumber;
     let specificLoc = req.body.specific_loc;
     let date = req.body.date;
     let time = req.body.time;
 
     if(date === '' || time === '') { //date나 time 입력값이 없을경우 새로고침
-        res.redirect(`/route/${routeNo}/write`);
+        res.redirect(`/route/${routeId}/write`);
         return;
     }
-    else if(!userNo) {
-        res.redirect("/auth/login");
-        return;
-    }
+
     //post 생성
-    query.set_post(userNo, routeNo, specificLoc, date, time, (err, postNo, username) => {
+    user.set_post(routeId, specificLoc, date, time, (err, postData) => {
         if(err) {
-            res.status(500).send("Server Error.");
+            next(err);
             return;
         }
+        let post = new query.Post(postData.postId);
         //소유주 attender에 추가
-        query.set_attender(postNo, userNo, username ,(err, result) => {
-            if(err) {
-                res.status(500).send("Server Error.");
+        post.set_attender(user.userId, postData.ownerName ,(_err, _result) => {
+            if(_err) {
+                next(_err);
                 return;
             }
 
@@ -263,13 +281,13 @@ app.post('/route/:routeNumber/write/process', (req, res, next) => {
             let month = date.substring(5, 7);
             let day = date.substring(8, 10);
 
-            if(parseInt(month) < 10) { //Month 포매팅
+            if(parseInt(month) < 10) { //Month Formatting
                 month = month.substring(1, 2);
             }
-            if(parseInt(day) < 10) { //Day 포매팅
+            if(parseInt(day) < 10) { //Day Formatting
                 day = day.substring(1, 2);
             }
-            res.redirect(`/route/${routeNo}/postlist?year=${year}&month=${month}&day=${day}`);
+            res.redirect(`/route/${routeId}/postlist?year=${year}&month=${month}&day=${day}`);
         });
     });
 });
@@ -279,26 +297,29 @@ app.get('/route/:routeNumber/post/:postNumber/delete', (req, res, next) => {
     if(!req.user) { //로그인 체크
         res.redirect("/auth/login");
     }
-
-    let userNo = req.user;
-    let routeNo = req.params.routeNumber;
-    let postNo = req.params.postNumber;
+    
+    //객체들
+    let user = new query.User(req.user);
+    let post = new query.Post(req.params.postNumber);
+    
+    let routeId = req.params.routeNumber;
+    let postId = req.params.postNumber;
 
     //로그인한 계정 이름과 POST 소유주 이름과 일치 확인
-    query.get_post(postNo, (err, postData) => {
-        if(err) {
-            res.status(500).send("Server Error.");
+    post.get_data((err, postData) => {
+        if(err || !postData) {
+            next(err);
             return;
         }
-        let ownerNo = postData['owner_user_no'];
-        if(ownerNo !== userNo) { //소유주가 일치하지 않을 경우
-            res.redirect(`../${postNo}`);
+        let ownerId = postData['owner_user_no'];
+        if(ownerId !== user.userId) { //소유주가 일치하지 않을 경우
+            res.redirect(`../${postId}`);
             return;
         }
 
-        query.del_post(postNo, (_err, _result) => {
+        post.delete((_err, _result) => {
             if(_err) {
-                res.status(500).send("Server Error.");
+                next(_err);
                 return;
             }
             else if(_result === true) {
@@ -307,9 +328,19 @@ app.get('/route/:routeNumber/post/:postNumber/delete', (req, res, next) => {
             else if(_result === false) {
                 console.log("false use flash at delete");
             }
-            res.redirect(`/route/${routeNo}/postlist`);
+            res.redirect(`/route/${routeId}/postlist`);
         });
     });
+});
+
+//에러 발생시 실행. next(err);로 이리 올 수 있음
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Error occured!');
+});
+
+app.use((req, res, next) => {
+    res.status(400).send('Cant find this path!');
 });
 
 app.listen(3000, () => console.log("Node.js Server Running."));

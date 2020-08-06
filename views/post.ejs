@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+        <link rel="shortcut icon" href="/image/favicon.ico">
+        <link rel="icon" href="/image/favicon.ico">
+        <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/post.css">
+        <title>가치타자 - 회원가입</title>
+    </head>
+
+    <body>
+        <header>
+            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <!-- 로그인, 내 정보 관리 버튼 -->
+            <nav class="box-container">
+                <div class="box"></div>
+                <ul class="menuList">
+                    <li class="menuBtn">회원설정</li>
+
+                    <%# 로그인 버튼 %>
+                    <% if (userNo) { %>
+                        <li class="menuBtn" onclick="location.href='/auth/logout'">로그아웃</li>
+                    <% } else { %>
+                        <li class="menuBtn" onclick="location.href='/auth/login'">로그인 / 회원가입</li>
+                    <% } %>
+                </ul>
+                <div class="box"></div>
+            </nav>
+        </header>
+        <!-- 로그인 폼 -->
+        <main class="box-container">
+            <div class="box"></div>
+            <div class="info">
+                <div>
+                    <h4 class="infoTitle">노선</h4>
+                    <p class="context">
+                        <%=departure%> -> <%=destination%>
+                    </p>
+                    <hr>
+
+                    <h4 class="infoTitle">탑승 시각</h4>
+                    <p class="context">
+                        <%=time%>
+                    </p>
+                    <hr>
+
+                    <h4 class="infoTitle">탑승자</h4>
+                    <p class="context">
+                        <% let attenderStr = attenders[0]; %>
+                        <% for(let i = 1; i < attenders.length; i++) { %>
+                        <%     attenderStr = attenderStr + " | " + attenders[i]; %>
+                        <% } %>
+                        <%=attenderStr%>
+                    </p>
+                    <hr>
+
+                    <h4 class="infoTitle">탑승 상세 위치</h4>
+                    <p class="context">
+                        <%=specificLoc%>
+                    </p>
+                    <hr>
+                </div>
+                <button type="button" class="btn" onclick="location.href='../postlist'">뒤로가기</button>
+
+                <%# 참가, 참가취소, 삭제 버튼 생성 %>
+                <% if(isAttended === false && isOwner === false) { %>
+                    <button type="button" class="btn" onclick="location.href='./<%=postNo%>/attend'">참가</button>
+                <% } else if (isOwner ===  true) { %>
+                    <button type="button" class="btn" onclick="location.href='./<%=postNo%>/delete'">삭제</button>
+                <% } else if (isAttended === true) { %>
+                    <button type="button" class="btn" onclick="location.href='./<%=postNo%>/attend_cancel'">참가 취소</button>
+                <% } %>
+                    
+            </div>
+            <div class="box"></div>
+        </main>
+        <footer>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+
+        <!-- Bootstrap CDN -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3./css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
+        <!-- custom library -->
+        <link rel="shortcut icon" href="/image/favicon.ico">
+        <link rel="icon" href="/image/favicon.ico">
+        <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/board.css">
+        <script src="/js/board.js"></script>
+
+        <title>가치타자</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <!-- 로그인, 내 정보 관리 버튼 -->
+            <nav class="box-container">
+                <div class="box"></div>
+                    <ul class="menuList">
+                        <li class="menuBtn">회원설정</li>
+
+                        <%# 로그인 버튼 %>
+                        <% if (userNo) { %>
+                            <li class="menuBtn" onclick="location.href='/auth/logout'">로그아웃</li>
+                        <% } else { %>
+                            <li class="menuBtn" onclick="location.href='/auth/login'">로그인 / 회원가입</li>
+                        <% } %>
+
+                    </ul>
+                <div class="box"></div>
+            </nav>
+        </header>
+        <main class="box-container">
+            <div class="box"></div>
+            <!-- 날짜 선택기 -->
+            <div class="divMain">
+                <form action="./postlist" method="get" class="dateForm">
+                    <p>
+                        <select id="years" name="year" style="width: 100px;" onchange="monthChangeDetect()">
+                        </select>
+
+                        <select id="months" name="month" style="width: 80px;" onchange="monthChangeDetect()">
+                        </select>
+
+                        <select id="days" name="day" style="width: 80px;">
+                        </select>
+                        <input type="submit" value="검색"/>
+                    </p>
+                </form>
+
+                <!-- select 옵션 추가 -->
+                <script>
+                    addSelectOption();
+                </script>
+
+                <!-- 포스트 리스트 -->
+                <table class="table table-striped">
+                    <thead>
+                        <th>게시글 번호</th>
+                        <th>시각</th>
+                        <th>게시자</th>
+                        <th>현재 인원</th>
+                    </thead>
+                    <tbody>
+
+                        <% for(let i = 0; i < postList.length; i++) { %>
+                            <tr class="postBtn" onclick="location.href='/route/<%=routeNo%>/post/<%=postList[i]['post_no']%>'">
+                                <td><%=postList[i]['post_no']%></td>
+                                <td><%=postList[i]['reservation_time']%></td>
+                                <td><%=postList[i]['owner_user_name']%></td>
+                                <td><%=postList[i]['attender_num']%>/3</td>
+                            </tr>
+                        <% } %>
+                        
+                    </tbody>
+                </table>
+                <button type="button" class="writeBtn" onclick="location.href='../../'">뒤로가기</button>
+                <button class="writeBtn" onclick="location.href='/route/<%=routeNo%>/write'">글작성</button>
+            </div>
+            <div class="box"></div>
+        </main>
+        <footer>
+
+        </footer>
+    </body>
+</html>

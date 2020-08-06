@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+        <link rel="shortcut icon" href="/image/favicon.ico">
+        <link rel="icon" href="/image/favicon.ico">
+        <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/register.css">
+        <title>가치타자 - 회원가입</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+        </header>
+        <!-- 로그인 폼 -->
+        <main class="box-container">
+            <div class="box"></div>
+            <form action="/auth/register/process" method="post" class="register">
+                <label for="user_email" class="label">이메일</labeL>
+                <input type="email"  name="email" id="user_email" class="input" placeholder="E-MAIL"/>
+
+                <label for="user_pw" class="label">비밀번호</labeL>
+                <input type="password"  name="password" id="user_pw" class="input" placeholder="PASSWORD"/>
+
+                <label for="user_phone" class="label">전화번호</labeL>
+                <input type="tel"  name="phone" id="user_phone" class="input" placeholder="PHONE NUMBER"/>
+
+                <div class="userType">
+                    <label class="label"><input type="radio" name="user_type" value="1"/>택시기사</label>
+                    <label class="label"><input type="radio" name="user_type" value="0"/>탑승자</label>
+                </div>
+
+                <p>
+                    <labeL for="user_nickname" class="label">닉네임</labeL>
+                    <input type="text" name="nick" id="user_nickname" class="input" placeholder="NICKNAME"/>
+                </p>
+                <div style="color:red; margin-bottom: 1rem; font-size:1.2rem; font-weight:bold;"><%=flashMsg%></div>
+                <input type="submit" id="submit" value="회원가입"/>
+            </form>
+            <div class="box"></div>
+        </main>
+        <footer>
+
+        </footer>
+    </body>
+</html>

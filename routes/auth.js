@@ -1,6 +1,5 @@
 /* Library */
 const express = require('express');
-const html = require('../html/template');
 const query = require('../lib/query');
 
 const router = express.Router();
@@ -17,8 +16,7 @@ router.get('/login', (req, res, next) => {
     if(fmsg.error) {
         feedback = fmsg.error;
     }
-
-    res.send(html.LOGIN(feedback));
+    res.render('login', {flashMsg: feedback});
 });
 
 router.get('/register', (req, res, next) => {
@@ -28,7 +26,7 @@ router.get('/register', (req, res, next) => {
         feedback = fmsg.error;
     }
 
-    res.send(html.REGISTER(feedback));
+    res.render('register', {flashMsg: feedback});
 });
 
 router.post('/register/process', (req, res, next) => {
@@ -37,8 +35,6 @@ router.post('/register/process', (req, res, next) => {
     let phone = req.body.phone;
     let userType = req.body.user_type;
     let nick = req.body.nick;
-
-    console.log(email, password, nick, phone, userType);
 
     if(!email) {
         req.flash('error', "이메일을 입력하십시오.");
@@ -116,7 +112,6 @@ passport.use(new LocalStrategy(
     function(email, password, done) {
         //로그인 프로세스
         query.login_check(email, password, (result) => {
-            console.log(result);
             if (result) {
                 return done(null, result);
             }
