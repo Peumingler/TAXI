@@ -141,7 +141,7 @@ app.get('/route/:routeNumber/post/:postNumber', (req, res, next) => {
         time = postData['reservation_time'];
         specificLoc = postData['specific_loc'];
         //참가자 이름 얻기
-        query.get_attender(post.postId, (err, data) => {
+        post.get_attender((err, data) => {
             if(err) {
                 next(err);
                 return;
