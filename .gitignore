@@ -117,3 +117,6 @@ dist
 
 #CUSTOM
 .vscode/
+
+config/database.json
+config/mail.json
