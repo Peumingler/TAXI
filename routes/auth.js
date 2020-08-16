@@ -2,6 +2,8 @@
 const express = require('express');
 
 const query = require('../lib/query');
+const email_query = require('../lib/email-query');
+
 const mailing = require('../mailing/mailing');
 
 const router = express.Router();
@@ -75,8 +77,8 @@ router.post('/register/process', (req, res, next) => {
                 res.redirect('/auth/register');
             }
             else if(userId) { //회원가입 성공
-                req.flash('message', "인증 이메일을 귀하의 이메일로 보냈습니다. 인증 후 사용가능합니다.");
                 mailing.send_register_mail(email, userId, nick); //메일 보내기
+                req.flash('message', "인증 이메일을 귀하의 이메일로 보냈습니다. 인증 후 사용가능합니다.");
                 res.redirect('/auth/login');
             }
             else { //알수없는 오류
@@ -90,7 +92,20 @@ router.post('/register/process', (req, res, next) => {
 router.get('/emailcheck/:encryptedStr', (req, res, next) => {
     let encryptedStr = req.params.encryptedStr;
     console.log(encryptedStr);
-    res.redirect('/');
+    email_query.search_email_verify(encryptedStr, (err, userId) => {
+        if(userId) {
+            email_query.delete_email_verify(userId, () => {}); //email_verify 삭제
+
+            let user = new query.User(userId);
+            user.activation(); //유저 activation
+
+            req.flash('message', "계정이 활성화 되었습니다.");
+            res.redirect('/auth/login');
+        }
+        else {
+            res.redirect('/');
+        }
+    });
 });
 
 router.get('/logout', (req, res, next) => {

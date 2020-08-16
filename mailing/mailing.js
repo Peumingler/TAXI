@@ -36,7 +36,6 @@ exports.send_register_mail = function(toAddress, userId, nick, callback) {
             //이메일 html 생성
             ejs.renderFile('views/mail_auth.ejs', {nickname: nick, verifyStr: encryptedStr}, {}, (err, str) => {
                 send_mail(toAddress, "가치타자 이메일 인증", str);
-                console.log("mail sended");
             });
         }
         else {
