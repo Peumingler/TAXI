@@ -87,7 +87,7 @@ router.post('/register/process', (req, res, next) => {
             }
         });
     }
-})
+});
 
 router.get('/emailcheck/:encryptedStr', (req, res, next) => {
     let encryptedStr = req.params.encryptedStr;
@@ -146,10 +146,13 @@ passport.use(new LocalStrategy(
             if (result) {
                 return done(null, result);
             }
-            else if (result === false) {
+            else if (result === false) { //아이디 또는 비밀번호 틀림
                 return done(null, false, { message : '아이디 또는 비밀번호가 틀렸습니다.'});
             }
-            else {
+            else if (result === undefined) { //활성화 상태가 아님
+                return done(null, false, { message : '계정이 비활성화 상태입니다.'});
+            }
+            else { //에러상태
                 return done(null, false, { message : "Login Error : Server Error."});
             }
         });
