@@ -91,6 +91,10 @@ router.post('/register/process', (req, res, next) => {
 
 router.get('/emailcheck/:encryptedStr', (req, res, next) => {
     let encryptedStr = req.params.encryptedStr;
+<<<<<<< HEAD
+=======
+    console.log(encryptedStr);
+>>>>>>> 4eca2bbe1bf7dd9e7c9a103aa95b8a02978cf14f
     email_query.search_email_verify(encryptedStr, (err, userId) => {
         if(userId) {
             email_query.delete_email_verify(userId, () => {}); //email_verify 삭제
@@ -106,6 +110,7 @@ router.get('/emailcheck/:encryptedStr', (req, res, next) => {
         }
     });
 });
+<<<<<<< HEAD
 
 router.get('/find/password', (req, res, next) => {
     let fmsg = req.flash();
@@ -136,6 +141,8 @@ router.post('/find/password/process', (req, res, next) => {
         res.redirect('/auth/login');
     });
 });
+=======
+>>>>>>> 4eca2bbe1bf7dd9e7c9a103aa95b8a02978cf14f
 
 router.get('/logout', (req, res, next) => {
     delete req.user;
