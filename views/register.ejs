@@ -19,13 +19,13 @@
             <div class="box"></div>
             <form action="/auth/register/process" method="post" class="register">
                 <label for="user_email" class="label">이메일</labeL>
-                <input type="email"  name="email" id="user_email" class="input" placeholder="E-MAIL"/>
+                <input type="email"  name="email" id="user_email" class="input" placeholder="E-Mail"/>
 
                 <label for="user_pw" class="label">비밀번호</labeL>
-                <input type="password"  name="password" id="user_pw" class="input" placeholder="PASSWORD"/>
+                <input type="password"  name="password" id="user_pw" class="input" placeholder="Password"/>
 
                 <label for="user_phone" class="label">전화번호</labeL>
-                <input type="tel"  name="phone" id="user_phone" class="input" placeholder="PHONE NUMBER"/>
+                <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
 
                 <div class="userType">
                     <label class="label"><input type="radio" name="user_type" value="1"/>택시기사</label>
@@ -34,7 +34,7 @@
 
                 <p>
                     <labeL for="user_nickname" class="label">닉네임</labeL>
-                    <input type="text" name="nick" id="user_nickname" class="input" placeholder="NICKNAME"/>
+                    <input type="text" name="nick" id="user_nickname" class="input" placeholder="Nickname"/>
                 </p>
                 <div style="color:red; margin-bottom: 1rem; font-size:1.2rem; font-weight:bold;"><%=flashMsg%></div>
                 <input type="submit" id="submit" value="회원가입"/>
