@@ -41,18 +41,23 @@ app.use('/image', express.static('./images'));
 
 
 app.get('/', (req, res, next) => {
-    let userNo = req.user;
-
+    let userId;
+    if(req.user) { //로그인 여부 확인
+        userId = req.user.userId;
+    }
     query.get_route_list((err, routeList) => {
         if(!err) {
-            res.render('route_list', {userNo: userNo, routeList: routeList});
+            res.render('route_list', {userNo: userId, routeList: routeList});
         }
     });
 });
 
 //POSTLIST 보기
 app.get('/route/:routeNumber/postlist/', (req, res, next) => {
-    let userNo = req.user;
+    let userId;
+    if(req.user) {
+        userId = req.user.userId;
+    }
     let routeNo = req.params.routeNumber //시멘틱 URL 파싱
 
     //인터넷에 없던 get데이터 가져오는 방법(선택된 날짜구하기)
@@ -103,7 +108,7 @@ app.get('/route/:routeNumber/postlist/', (req, res, next) => {
             next(err);
             return;
         }
-        res.render('post_list', {userNo: userNo, routeNo: routeNo, postList});
+        res.render('post_list', {userNo: userId, routeNo: routeNo, postList});
     });
 });
 
@@ -113,7 +118,7 @@ app.get('/route/:routeNumber/post/:postNumber', (req, res, next) => {
         res.redirect("/auth/login");
         return;
     }
-    let user = new query.User(req.user);
+    let user = req.user;
     let post = new query.Post(req.params.postNumber);
 
     //template에 넘겨줄 데이터들
@@ -186,7 +191,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend', (req, res, next) => {
         res.redirect("/auth/login");
         return;
     }
-    let user = new query.User(req.user); //TODO req.user에 User 객체를 직접 넣도록 변경
+    let user = req.user; //TODO req.user에 User 객체를 직접 넣도록 변경
     let post = new query.Post(req.params.postNumber);
 
     user.get_userData((err, userData) => {
@@ -215,7 +220,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend_cancel', (req, res, next) =
         return;
     }
 
-    let user = new query.User(req.user);
+    let user = req.user;
     let post = new query.Post(req.params.postNumber);
 
     post.del_attender(user.userId, (err, result) => {
@@ -252,7 +257,7 @@ app.post('/route/:routeNumber/write/process', (req, res, next) => {
         return;
     }
 
-    let user = new query.User(req.user);
+    let user = req.user;
     let routeId = req.params.routeNumber;
     let specificLoc = req.body.specific_loc;
     let date = req.body.date;
@@ -299,7 +304,7 @@ app.get('/route/:routeNumber/post/:postNumber/delete', (req, res, next) => {
     }
     
     //객체들
-    let user = new query.User(req.user);
+    let user = req.user;
     let post = new query.Post(req.params.postNumber);
     
     let routeId = req.params.routeNumber;
@@ -343,4 +348,4 @@ app.use((req, res, next) => {
     res.status(400).send('Cant find this path!');
 });
 
-app.listen(3000, () => console.log("Node.js Server Running."));
+app.listen(3000, () => console.log("ride_togather node.js Server Running."));
