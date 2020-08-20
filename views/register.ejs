@@ -6,8 +6,30 @@
         <link rel="shortcut icon" href="/image/favicon.ico">
         <link rel="icon" href="/image/favicon.ico">
         <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+
         <link rel="stylesheet" type="text/css" href="/css/layout.css">
         <link rel="stylesheet" type="text/css" href="/css/register.css">
+        <script>
+            function is_same() {
+                let pw = document.getElementById("user_pw").value;
+                let confirm_pw = document.getElementById("confirm_pw").value;
+
+                let checkMsg = document.getElementById("pw_check_msg");
+
+                if (pw === confirm_pw) {
+                    checkMsg.innerHTML = "비밀번호가 일치합니다.";
+                    checkMsg.style.color = "blue";
+                }
+                else {
+                    checkMsg.style.color = "red";
+                    checkMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+                }
+            }
+
+            function delete_msg() {
+                document.getElementById("pw_check_msg").innerHTML = '';
+            }
+        </script>
         <title>가치타자 - 회원가입</title>
     </head>
     <body>
@@ -18,14 +40,22 @@
         <main class="box-container">
             <div class="box"></div>
             <form action="/auth/register/process" method="post" class="register">
-                <label for="user_email" class="label">이메일</labeL>
-                <input type="email"  name="email" id="user_email" class="input" placeholder="E-Mail"/>
-
-                <label for="user_pw" class="label">비밀번호</labeL>
-                <input type="password"  name="password" id="user_pw" class="input" placeholder="Password"/>
-
-                <label for="user_phone" class="label">전화번호</labeL>
-                <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
+                <p>
+                    <label for="user_email" class="label">이메일</labeL>
+                    <input type="email"  name="email" id="user_email" class="input" placeholder="E-Mail"/>
+                </p>
+                <p>
+                    <label for="user_pw" class="label">비밀번호</labeL>
+                    <input type="password"  name="password" id="user_pw" class="input" onchange="delete_msg()" placeholder="Password"/>
+        
+                    <label for="user_pw" class="label">비밀번호 확인</labeL>
+                    <input type="password" name="confirm_password" id="confirm_pw" class="input" onchange="is_same()" placeholder="Confirm password"/>
+                    <span id="pw_check_msg" style="font-size: 1rem;"></span>
+                </p>
+                <p>
+                    <label for="user_phone" class="label">전화번호</labeL>
+                    <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
+                </p>
 
                 <div class="userType">
                     <label class="label"><input type="radio" name="user_type" value="1"/>택시기사</label>

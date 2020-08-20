@@ -167,7 +167,7 @@ router.post('/change/password/:encryptedStr', (req, res, next) => {
     email_query.search_email_verify(encryptedStr, (err, userId) => {
         if(userId) {
             let user = new query.User(userId);
-            user.set_password(newPassword);
+            user.set_password(newPassword, () => {});
             delete user;
 
             email_query.delete_email_verify(userId, () => {}); //이메일 인증 제거
