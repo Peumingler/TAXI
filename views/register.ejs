@@ -21,13 +21,75 @@
                     checkMsg.style.color = "blue";
                 }
                 else {
-                    checkMsg.style.color = "red";
                     checkMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+                    checkMsg.style.color = "red";
                 }
             }
 
-            function delete_msg() {
+            function delete_pw_msg() {
                 document.getElementById("pw_check_msg").innerHTML = '';
+            }
+
+            function ajax_is_email_exist() {
+                document.getElementById("email_check_msg").innerHTML = '';
+                let email = document.getElementById("user_email").value;
+
+                fetch('/ajax/email/isduplicated',
+                    {
+                        method: "POST",
+                        body: JSON.stringify({email: email}),
+                        headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
+                    })
+                .then(response => response.json()
+                    .then(result => {
+                        let isExist = result.exist;
+                        let msg = document.getElementById("email_check_msg");
+
+                        console.log(isExist);
+
+                        //존재할 경우 경고 메세지
+                        if(isExist) {    
+                            document.getElementById("submit").disabled = true;
+                            msg.innerHTML = "이미 존재하는 이메일 입니다.";
+                            msg.style.color = "red";
+                        }
+                        else {
+                            document.getElementById("submit").disabled = false;
+                            msg.innerHTML = "사용가능한 이메일 입니다.";
+                            msg.style.color = "blue";
+                        }
+                    })
+                );
+            }
+
+            function ajax_is_nick_exist() {
+                document.getElementById("nick_check_msg").innerHTML = '';
+                let nick = document.getElementById("user_nickname").value;
+
+                fetch('/ajax/nick/isduplicated',
+                    {
+                        method: "POST",
+                        body: JSON.stringify({nick: nick}),
+                        headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
+                    })
+                .then(response => response.json()
+                    .then(result => {
+                        let isExist = result.exist;
+                        let msg = document.getElementById("nick_check_msg");
+
+                        //존재할 경우 경고 메세지
+                        if(isExist) {    
+                            document.getElementById("submit").disabled = true;
+                            msg.innerHTML = "이미 존재하는 닉네임 입니다.";
+                            msg.style.color = "red";
+                        }
+                        else {
+                            document.getElementById("submit").disabled = false;
+                            msg.innerHTML = "사용가능한 닉네임 입니다.";
+                            msg.style.color = "blue";
+                        }
+                    })
+                );
             }
         </script>
         <title>가치타자 - 회원가입</title>
@@ -42,11 +104,12 @@
             <form action="/auth/register/process" method="post" class="register">
                 <p>
                     <label for="user_email" class="label">이메일</labeL>
-                    <input type="email"  name="email" id="user_email" class="input" placeholder="E-Mail"/>
+                    <input type="email"  name="email" id="user_email" class="input" onchange="ajax_is_email_exist()" placeholder="E-Mail"/>
+                    <span id="email_check_msg" style="font-size: 1rem;"></span>
                 </p>
                 <p>
                     <label for="user_pw" class="label">비밀번호</labeL>
-                    <input type="password"  name="password" id="user_pw" class="input" onchange="delete_msg()" placeholder="Password"/>
+                    <input type="password"  name="password" id="user_pw" class="input" onchange="delete_pw_msg()" placeholder="Password"/>
         
                     <label for="user_pw" class="label">비밀번호 확인</labeL>
                     <input type="password" name="confirm_password" id="confirm_pw" class="input" onchange="is_same()" placeholder="Confirm password"/>
@@ -56,16 +119,15 @@
                     <label for="user_phone" class="label">전화번호</labeL>
                     <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
                 </p>
-
-                <div class="userType">
-                    <label class="label"><input type="radio" name="user_type" value="1"/>택시기사</label>
-                    <label class="label"><input type="radio" name="user_type" value="0"/>탑승자</label>
-                </div>
-
                 <p>
                     <labeL for="user_nickname" class="label">닉네임</labeL>
-                    <input type="text" name="nick" id="user_nickname" class="input" placeholder="Nickname"/>
+                    <input type="text" name="nick" id="user_nickname" class="input" onchange="ajax_is_nick_exist()" placeholder="Nickname"/>
+                    <span id="nick_check_msg" style="font-size: 1rem;"></span>
                 </p>
+                <div class="userType">
+                    <label class="label"><input type="radio" name="user_type" value="0"/>탑승자</label>
+                    <label class="label"><input type="radio" name="user_type" value="1"/>택시기사</label>
+                </div>
                 <div style="color:red; margin-bottom: 1rem; font-size:1.2rem; font-weight:bold;"><%=flashMsg%></div>
                 <input type="submit" id="submit" value="회원가입"/>
             </form>

@@ -29,8 +29,10 @@ app.use(passport.session()); //passport 세션 연동
 app.use(flash()); //flash메세지 연동
 
 /* Router */
+const ajaxRouter = require('./routes/ajax');
 const authRouter = require('./routes/auth');
 
+app.use('/ajax', ajaxRouter);
 app.use('/auth', authRouter);
 
 
