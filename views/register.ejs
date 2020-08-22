@@ -34,6 +34,10 @@
                 document.getElementById("email_check_msg").innerHTML = '';
                 let email = document.getElementById("user_email").value;
 
+                if(email === '') {
+                    return;
+                }
+
                 fetch('/ajax/email/isduplicated',
                     {
                         method: "POST",
@@ -44,8 +48,6 @@
                     .then(result => {
                         let isExist = result.exist;
                         let msg = document.getElementById("email_check_msg");
-
-                        console.log(isExist);
 
                         //존재할 경우 경고 메세지
                         if(isExist) {    
@@ -65,6 +67,10 @@
             function ajax_is_nick_exist() {
                 document.getElementById("nick_check_msg").innerHTML = '';
                 let nick = document.getElementById("user_nickname").value;
+
+                if(nick === '') {
+                    return;
+                }
 
                 fetch('/ajax/nick/isduplicated',
                     {
@@ -116,7 +122,7 @@
                     <span id="pw_check_msg" style="font-size: 1rem;"></span>
                 </p>
                 <p>
-                    <label for="user_phone" class="label">전화번호</labeL>
+                    <label for="user_phone" class="label">전화번호 ex) 01012345678</labeL>
                     <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
                 </p>
                 <p>

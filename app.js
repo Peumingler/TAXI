@@ -40,6 +40,7 @@ app.use('/auth', authRouter);
 app.use('/css',express.static('./css'));
 app.use('/js', express.static('./js'));
 app.use('/image', express.static('./images'));
+app.use('/font', express.static('./font'));
 
 
 app.get('/', (req, res, next) => {
