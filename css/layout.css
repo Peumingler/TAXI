@@ -1,3 +1,4 @@
+/*
 @font-face {
     font-family: 'NanumBarunPen';
     src: url(/font/NanumPen.ttf);
@@ -7,10 +8,11 @@
     font-family: 'NanumBarunGothic';
     src: url(/font/NanumBarunGothic.ttf);
 }
+*/
 
 body {
     background-color: #EFEFEF;
-    font-family: NanumBarunGothic;
+    /*font-family: NanumBarunGothic;*/
     font-size: 30px;
 }
 
@@ -20,7 +22,7 @@ body {
     text-align: center;
     cursor: pointer;
 
-    font-family: NanumBarunPen;
+    /*font-family: NanumBarunPen;*/
 }
 
 .box-container {

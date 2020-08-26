@@ -21,7 +21,7 @@ app.use(session({ //세션 설치
     secret            : 'thisismysecret',
     resave            : false,
     saveUninitialized : true,
-    cookie            : {maxAge : 1000 * 60 * 60}
+    cookie            : {maxAge : 1000 * 60 * 60, secure: false} //secure은 https 적용시 true로 변경하기
 }));
 
 app.use(passport.initialize());
@@ -41,7 +41,6 @@ app.use('/css',express.static('./css'));
 app.use('/js', express.static('./js'));
 app.use('/image', express.static('./images'));
 app.use('/font', express.static('./font'));
-
 
 app.get('/', (req, res, next) => {
     let userId;
@@ -200,7 +199,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend', (req, res, next) => {
     user.get_userData((err, userData) => {
         let username = userData['username'];
 
-        post.set_attender(req.user, username, (err, result) => {
+        post.set_attender(user.userId, username, (err, result) => {
             if(err) {
                 next(err);
                 return;
@@ -245,6 +244,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend_cancel', (req, res, next) =
 //POST 생성
 app.get('/route/:routeNumber/write', (req, res, next) => {
     if(!req.user) { //로그인 체크
+        req.session.callbackUrl = req.originalUrl;
         res.redirect("/auth/login");
         return;
     }

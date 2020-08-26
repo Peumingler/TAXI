@@ -203,11 +203,24 @@ passport.deserializeUser((id, done) => {
 
 router.post('/login/process',
     passport.authenticate('local', {
-        successRedirect : '/',
+        //successRedirect : '/',
         failureRedirect : '/auth/login',
         failureFlash    : true,
         badRequestMessage: '아이디 또는 비밀번호를 입력하십시오.'
-    })
+    }),
+    //로그인 성공 후 실행되는 function. 실패시 실행 안됨.
+    function (req, res) {
+        let callbackUrl = req.session.callbackUrl;
+
+        req.session.callbackUrl = undefined; //callbackUrl 세션 데이터 제거
+
+        if (callbackUrl) {
+            res.redirect(callbackUrl);
+        }
+        else {
+            res.redirect('/');
+        }
+    }
 );
 
 passport.use(new LocalStrategy(
