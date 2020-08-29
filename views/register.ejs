@@ -38,14 +38,15 @@
                     return;
                 }
 
-                fetch('/ajax/email/isduplicated',
+                fetch(`/ajax/email/isduplicated?email=${email}`,
                     {
-                        method: "POST",
-                        body: JSON.stringify({email: email}),
+                        method: "GET",
+                        //body: JSON.stringify({email: email}),
                         headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
                     })
                 .then(response => response.json()
                     .then(result => {
+                        console.log(result);
                         let isExist = result.exist;
                         let msg = document.getElementById("email_check_msg");
 
@@ -72,10 +73,10 @@
                     return;
                 }
 
-                fetch('/ajax/nick/isduplicated',
+                fetch(`/ajax/nick/isduplicated?nick=${nick}`,
                     {
-                        method: "POST",
-                        body: JSON.stringify({nick: nick}),
+                        method: "GET",
+                        //body: JSON.stringify({nick: nick}),
                         headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
                     })
                 .then(response => response.json()

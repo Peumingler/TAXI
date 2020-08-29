@@ -17,7 +17,7 @@ app.set('view engine', 'ejs'); //view engine ejs apply
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(session({ //세션 설치
+app.use(session({ //session apply
     secret            : 'thisismysecret',
     resave            : false,
     saveUninitialized : true,
@@ -54,69 +54,34 @@ app.get('/', (req, res, next) => {
     });
 });
 
-//POSTLIST 보기
+//POSTLIST 페이지
 app.get('/route/:routeNumber/postlist/', (req, res, next) => {
     let userId;
     if(req.user) {
         userId = req.user.userId;
     }
-    let routeNo = req.params.routeNumber //시멘틱 URL 파싱
+    let routeId = req.params.routeNumber //시멘틱 URL 파싱
+    let date = req.query.date;
 
-    //인터넷에 없던 get데이터 가져오는 방법(선택된 날짜구하기)
-    let year;
-    let month;
-    let day;
-
-    if(req.query.year || req.query.month || req.query.day) { //get데이터 있을 경우
-        year = req.query.year;
-        if(parseInt(req.query.month) < 10) { //Month Formatting
-            month = "0" + req.query.month;
-        }
-        else {
-            month = req.query.month;
-        }
-
-        if(parseInt(req.query.day) < 10) { //Day Formatting
-            day = "0" + req.query.day;
-        }
-        else {
-            day = req.query.day;
-        }
+    if(!date) { //get 데이터 없을 경우 오늘 날짜로 변경
+        date = new Date().toISOString().split('T')[0];
     }
-    else {  //없을 경우
-        let today = new Date();
-        year = today.getFullYear().toString();
-        let todayMonth = today.getMonth() + 1;
-        if(todayMonth < 10) { //Month Formatting
-            month = "0" + todayMonth.toString();
-        }
-        else {
-            month = todayMonth.toString();
-        }
-
-        if(today.getDate() < 10) { //Day Formatting
-            day = "0" + today.getDate().toString();
-        }
-        else {
-            day = today.getDate().toString();
-        }
-    }
-    let selectedDate = year + month + day; //선택된 날짜 YYYYMMDD  string 형식
 
     //모집글 리스트 가져오기
-    query.get_post_list(routeNo, selectedDate, (err, postList) => {
+    query.get_post_list(routeId, date, (err, postList) => {
         if(err) {
             console.error("Postlist Error : get_post_list Error");
             next(err);
             return;
         }
-        res.render('post_list', {userNo: userId, routeNo: routeNo, postList});
+        res.render('post_list', {userNo: userId, routeNo: routeId, postList});
     });
 });
 
-//post 보기
+//post 페이지
 app.get('/route/:routeNumber/post/:postNumber', (req, res, next) => {
     if(!req.user) { //로그인 체크
+        req.session.callbackUrl = req.originalUrl;
         res.redirect("/auth/login");
         return;
     }
@@ -241,7 +206,7 @@ app.get('/route/:routeNumber/post/:postNumber/attend_cancel', (req, res, next) =
 });
 
 
-//POST 생성
+//POST 생성 페이지
 app.get('/route/:routeNumber/write', (req, res, next) => {
     if(!req.user) { //로그인 체크
         req.session.callbackUrl = req.originalUrl;
@@ -250,7 +215,7 @@ app.get('/route/:routeNumber/write', (req, res, next) => {
     }
 
     let routeNo = req.params.routeNumber;
-    res.render('write_post',{routeNo: routeNo});
+    res.render('post_write',{routeNo: routeNo});
 });
 
 //POST 생성 프로세스
@@ -284,18 +249,7 @@ app.post('/route/:routeNumber/write/process', (req, res, next) => {
                 next(_err);
                 return;
             }
-
-            let year = date.substring(0, 4);
-            let month = date.substring(5, 7);
-            let day = date.substring(8, 10);
-
-            if(parseInt(month) < 10) { //Month Formatting
-                month = month.substring(1, 2);
-            }
-            if(parseInt(day) < 10) { //Day Formatting
-                day = day.substring(1, 2);
-            }
-            res.redirect(`/route/${routeId}/postlist?year=${year}&month=${month}&day=${day}`);
+            res.redirect(`/route/${routeId}/postlist?date=${date}`);
         });
     });
 });
@@ -351,4 +305,4 @@ app.use((req, res, next) => {
     res.status(400).send('Cant find this path!');
 });
 
-app.listen(3000, () => console.log("ride_togather node.js Server Running."));
+app.listen(3000, () => console.log("ride_togather node.js Server Running at 3000."));

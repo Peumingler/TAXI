@@ -16,7 +16,68 @@
         <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
         <link rel="stylesheet" type="text/css" href="/css/layout.css">
         <link rel="stylesheet" type="text/css" href="/css/post_list.css">
-        <script src="/js/board.js"></script>
+        <script src="/js/lib/ajax_get.js"></script>
+        <script>
+            //페이지 로딩 완료 후 실행될 함수
+            window.onload = function() {
+                init_type_date();
+            }
+
+            function init_type_date() {
+                let today = new Date().toISOString().split('T')[0];
+                let date = get_url_parameter('date');
+                
+                if(!date) {
+                    date = today;
+                }
+                
+                //날짜 제한 생성
+                document.getElementsByName("date")[0].setAttribute('min', today);
+                //현재 날짜 삽입
+                document.getElementsByName("date")[0].setAttribute('value', date);
+            }
+
+            function get_postlist() {
+                let date = document.getElementsByName("date")[0].value;
+                let tbody = document.getElementById("list");
+
+                //URL 변경
+                history.pushState(null, null, "postlist?date=" + date);
+
+                //기존 Row 제거
+                tbody.innerHTML = "";
+
+                //새로운 Row 생성
+                ajax_get_postlist(<%=routeNo%>, date, (list) => {
+                    for (let i = 0; i < list.length; i++) {
+
+                        //td 추가
+                        let row = tbody.insertRow(tbody.rows.length);
+
+                        row.setAttribute('class', "postBtn");
+                        row.setAttribute('onclick', `location.href='/route/<%=routeNo%>/post/${list[i].post_no}'`);
+
+                        //tr 추가
+                        let postIdCell = row.insertCell(0);
+                        let timeCell = row.insertCell(1);
+                        let ownerCell = row.insertCell(2);
+                        let attenderNumCell = row.insertCell(3);
+
+                        postIdCell.innerHTML = list[i].post_no;
+                        timeCell.innerHTML = list[i].reservation_time;
+                        ownerCell.innerHTML = list[i].owner_user_name;
+                        attenderNumCell.innerHTML = list[i].attender_num + "/3";
+                    }
+                });
+            }
+
+            function get_url_parameter(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+        </script>   
 
         <title>가치타자</title>
     </head>
@@ -42,26 +103,14 @@
         </header>
         <main class="box-container">
             <div class="box"></div>
-            <!-- 날짜 선택기 -->
             <div class="divMain">
+                <!-- 날짜 선택기 -->
                 <form action="./postlist" method="get" class="dateForm">
                     <p>
-                        <select id="years" name="year" style="width: 100px;" onchange="monthChangeDetect()">
-                        </select>
-
-                        <select id="months" name="month" style="width: 80px;" onchange="monthChangeDetect()">
-                        </select>
-
-                        <select id="days" name="day" style="width: 80px;">
-                        </select>
-                        <input type="submit" value="검색"/>
+                        <input type="date" name="date" onchange="get_postlist()" class="input"/>
+                        <!-- <input type="submit" value="검색"/> -->
                     </p>
                 </form>
-
-                <!-- select 옵션 추가 -->
-                <script>
-                    addSelectOption();
-                </script>
 
                 <!-- 포스트 리스트 -->
                 <table class="table table-striped">
@@ -71,7 +120,7 @@
                         <th>게시자</th>
                         <th>현재 인원</th>
                     </thead>
-                    <tbody>
+                    <tbody id="list">
 
                         <% for(let i = 0; i < postList.length; i++) { %>
                             <tr class="postBtn" onclick="location.href='/route/<%=routeNo%>/post/<%=postList[i]['post_no']%>'">
