@@ -16,6 +16,8 @@ router.get('/email/isduplicated', (req, res, next) => {
         else {
             isExist = false;
         }
+        
+        console.log(isExist);
         res.json({exist: isExist});
     });
 });
@@ -55,6 +57,34 @@ router.get('/route/:routeNumber/postlist', (req, res, next) => {
         });
         res.json(returns);
     });
+});
+
+router.put('/phone', (req, res, next) => {
+    let user = req.user;
+    let newPhone = req.body.phone;
+
+    if(newPhone === "" || newPhone.length !== 11) { //번호 포맷 체크
+        res.json({isChanged: false});
+    }
+    else if(user) { //로그인 되어 있어야만 수정가능
+        user.set_phone(newPhone, (err, isChanged) => {
+            res.json({isChanged: isChanged});
+        });
+    }
+});
+
+router.put('/nick', (req, res, next) => {
+    let user = req.user;
+    let newNick = req.body.nick;
+
+    if(newNick === "") {
+        res.json({isChanged: false});
+    }
+    else if(user) { //로그인 되어 있어야만 수정가능
+        user.set_nick(newNick, (err, isChanged) => {
+            res.json({isChanged: isChanged});
+        });
+    }
 });
 
 module.exports = router;

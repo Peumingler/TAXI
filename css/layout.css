@@ -17,11 +17,41 @@ body {
 
 .title {
     width: 100%;
-    color: #002366;
     text-align: center;
-    cursor: pointer;
 
     /*font-family: NanumBarunPen;*/
+}
+
+.title a {
+    color: #003876;
+    text-decoration: none;
+}
+
+.menuList {
+    width: 100%;
+
+    list-style: none; /*점 제거*/
+    padding-left: 0px; /*점이 있는 공간 제거*/
+    margin-top: 0px;
+}
+.menuBtn {
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block; /*왼쪽에서 오른쪽으로 쌓이게 하는 것*/
+
+    background-color: #003876;
+    border: 1px solid whitesmoke;
+    border-radius: 1rem;
+}
+
+.menuBtn a {
+    color: white;
+    text-decoration: none;
+}
+
+.menuBtn a:hover {
+    text-decoration: underline;
 }
 
 .box-container {
@@ -32,29 +62,4 @@ body {
 }
 
 @media screen and (orientation : portrait) { /*세로모드*/
-}
-
-.menuList {
-    width: 100%;
-
-    list-style: none; /*점 제거*/
-    padding-left: 0px; /*점이 있는 공간 제거*/
-
-    margin: 0px;
-}
-.menuBtn {
-    width: 100%;
-    cursor: pointer;
-    text-align: center;
-    vertical-align: middle;
-    color: white;
-    display: inline-block; /*왼쪽에서 오른쪽으로 쌓이게 하는 것*/
-
-    background-color: #002366;
-    border: 1px solid whitesmoke;
-    border-radius: 1rem;
-}
-
-.menuBtn:hover {
-    text-decoration: underline;
 }

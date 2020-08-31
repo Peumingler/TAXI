@@ -9,10 +9,17 @@
 
         <link rel="stylesheet" type="text/css" href="/css/layout.css">
         <link rel="stylesheet" type="text/css" href="/css/register.css">
+        <script src="/js/lib/ajax_is_exist.js"></script>
         <script>
             function is_same() {
+                document.getElementById("pw_check_msg").innerHTML = '';
+                
                 let pw = document.getElementById("user_pw").value;
                 let confirm_pw = document.getElementById("confirm_pw").value;
+
+                if (pw === "" || confirm_pw === "") {
+                    return;
+                }
 
                 let checkMsg = document.getElementById("pw_check_msg");
 
@@ -26,11 +33,7 @@
                 }
             }
 
-            function delete_pw_msg() {
-                document.getElementById("pw_check_msg").innerHTML = '';
-            }
-
-            function ajax_is_email_exist() {
+            function is_email_exist() {
                 document.getElementById("email_check_msg").innerHTML = '';
                 let email = document.getElementById("user_email").value;
 
@@ -38,34 +41,24 @@
                     return;
                 }
 
-                fetch(`/ajax/email/isduplicated?email=${email}`,
-                    {
-                        method: "GET",
-                        //body: JSON.stringify({email: email}),
-                        headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
-                    })
-                .then(response => response.json()
-                    .then(result => {
-                        console.log(result);
-                        let isExist = result.exist;
-                        let msg = document.getElementById("email_check_msg");
+                ajax_is_email_exist(email, (isExist) => {
+                    let msg = document.getElementById("email_check_msg");
 
-                        //존재할 경우 경고 메세지
-                        if(isExist) {    
-                            document.getElementById("submit").disabled = true;
-                            msg.innerHTML = "이미 존재하는 이메일 입니다.";
-                            msg.style.color = "red";
-                        }
-                        else {
-                            document.getElementById("submit").disabled = false;
-                            msg.innerHTML = "사용가능한 이메일 입니다.";
-                            msg.style.color = "blue";
-                        }
-                    })
-                );
+                    //존재할 경우 경고 메세지
+                    if (isExist) {
+                        document.getElementById("submit").disabled = true;
+                        msg.innerHTML = "이미 존재하는 이메일 입니다.";
+                        msg.style.color = "red";
+                    }
+                    else {
+                        document.getElementById("submit").disabled = false;
+                        msg.innerHTML = "사용가능한 이메일 입니다.";
+                        msg.style.color = "blue";
+                    }
+                });
             }
 
-            function ajax_is_nick_exist() {
+            function is_nick_exist() {
                 document.getElementById("nick_check_msg").innerHTML = '';
                 let nick = document.getElementById("user_nickname").value;
 
@@ -73,37 +66,30 @@
                     return;
                 }
 
-                fetch(`/ajax/nick/isduplicated?nick=${nick}`,
-                    {
-                        method: "GET",
-                        //body: JSON.stringify({nick: nick}),
-                        headers: {"Content-Type": "application/json"} //json 형식으로 보내겠다는 헤더
-                    })
-                .then(response => response.json()
-                    .then(result => {
-                        let isExist = result.exist;
-                        let msg = document.getElementById("nick_check_msg");
+                ajax_is_nick_exist(nick, (isExist) => {
+                    let msg = document.getElementById("nick_check_msg");
 
-                        //존재할 경우 경고 메세지
-                        if(isExist) {    
-                            document.getElementById("submit").disabled = true;
-                            msg.innerHTML = "이미 존재하는 닉네임 입니다.";
-                            msg.style.color = "red";
-                        }
-                        else {
-                            document.getElementById("submit").disabled = false;
-                            msg.innerHTML = "사용가능한 닉네임 입니다.";
-                            msg.style.color = "blue";
-                        }
-                    })
-                );
+                    //존재할 경우 경고 메세지
+                    if (isExist) {
+                        document.getElementById("submit").disabled = true;
+                        msg.innerHTML = "이미 존재하는 닉네임 입니다.";
+                        msg.style.color = "red";
+                    }
+                    else {
+                        document.getElementById("submit").disabled = false;
+                        msg.innerHTML = "사용가능한 닉네임 입니다.";
+                        msg.style.color = "blue";
+                    }
+                });
             }
         </script>
         <title>가치타자 - 회원가입</title>
     </head>
     <body>
         <header>
-            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <h1 class="title">
+                <a href="/">가치타자</a>
+            </h1>
         </header>
         <!-- 로그인 폼 -->
         <main class="box-container">
@@ -111,12 +97,12 @@
             <form action="/auth/register/process" method="post" class="register">
                 <p>
                     <label for="user_email" class="label">이메일</labeL>
-                    <input type="email"  name="email" id="user_email" class="input" onchange="ajax_is_email_exist()" placeholder="E-Mail"/>
+                    <input type="email"  name="email" id="user_email" class="input" onchange="is_email_exist()" placeholder="E-Mail"/>
                     <span id="email_check_msg" style="font-size: 1rem;"></span>
                 </p>
                 <p>
                     <label for="user_pw" class="label">비밀번호</labeL>
-                    <input type="password"  name="password" id="user_pw" class="input" onchange="delete_pw_msg()" placeholder="Password"/>
+                    <input type="password"  name="password" id="user_pw" class="input" onchange="is_same()" placeholder="Password"/>
         
                     <label for="user_pw" class="label">비밀번호 확인</labeL>
                     <input type="password" name="confirm_password" id="confirm_pw" class="input" onchange="is_same()" placeholder="Confirm password"/>
@@ -128,7 +114,7 @@
                 </p>
                 <p>
                     <labeL for="user_nickname" class="label">닉네임</labeL>
-                    <input type="text" name="nick" id="user_nickname" class="input" onchange="ajax_is_nick_exist()" placeholder="Nickname"/>
+                    <input type="text" name="nick" id="user_nickname" class="input" onchange="is_nick_exist()" placeholder="Nickname"/>
                     <span id="nick_check_msg" style="font-size: 1rem;"></span>
                 </p>
                 <div class="userType">

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+        <link rel="shortcut icon" href="/image/favicon.ico">
+        <link rel="icon" href="/image/favicon.ico">
+        <link rel="apple-touch-icon" href="/image/apple-touch-icon.png">
+
+        <link rel="stylesheet" type="text/css" href="/css/layout.css">
+        <link rel="stylesheet" type="text/css" href="/css/user_setting.css">
+        <script src="/js/lib/ajax_is_exist.js"></script>
+        <script src="/js/lib/ajax_set.js"></script>
+        <script src="/js/user_setting.js"></script>
+        
+        <title>가치타자</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="title">
+                <a href="/">가치타자</a>
+            </h1>
+            <nav class="box-container">
+                <div class="box"></div>
+                    <ul class="menuList">
+                        <li class="menuBtn"><a href="mysetting">내 정보</a></li>
+                        <li class="menuBtn"><a href="mysetting?filter=setmyinfo">개인정보 변경</a></li>
+                        <li class="menuBtn"><a href="mysetting?filter=setpw">비밀번호 변경</a></li>
+                    </ul>
+                <div class="box"></div>
+            </nav>
+        </header>
+        <!-- 로그인 폼 -->
+        <main class="box-container">
+            <div class="box"></div>
+            
+            <% if (filter === "setmyinfo") { %>
+                <div class="setting">
+                    <p>
+                        <label for="user_phone" class="label">전화번호 ex) 01012345678</labeL>
+                        <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number" value="<%=userData.phone%>"/>
+                        <span id="phone_check_msg" style="font-size: 1rem;"></span>
+                        <button class="submit" onclick="change_phone()">전화번호 변경</button>
+                    </p>
+                    <p>
+                        <labeL for="user_nickname" class="label">닉네임</labeL>
+                        <input type="text" name="nick" id="user_nickname" class="input" onchange="is_nickname()" placeholder="Nickname" value="<%=userData.nick%>"/>
+                        <span id="nick_check_msg" style="font-size: 1rem;"></span>
+                        <button class="submit" onclick="change_nick()">닉네임 변경</button>
+                    </p>
+                </div>
+            <% } else if (filter === "setpw") { %>
+
+            <% } else { %>
+                <div class="setting">
+                    <p>
+                        <label class="label">이메일</label>
+                        <span class="label"><%=userData.email%></span>
+                    </p>
+                    <p>
+                        <label class="label">전화번호</labeL>
+                        <span class="label"><%=userData.phone%></span>
+                    </p>
+                    <p>
+                        <label class="label">닉네임</labeL>
+                        <span class="label"><%=userData.nick%></span>
+                    </p>
+                    <p>
+                        <% if (userData.userType === 0) { %><%# 탑승자일 경우 %>
+                            <label class="label"><input type="radio" checked disabled/>탑승자</label>
+                            <label class="label"><input type="radio" disabled/>택시기사</label>
+                        <% } else if (userData.userType === 1) { %><%# 택시기사일 경우 %>
+                            <label class="label"><input type="radio" disabled/>탑승자</label>
+                            <label class="label"><input type="radio" checked disabled/>택시기사</label>
+                        <% } %>
+                    </p>
+                </div>
+            <% } %>
+            <!--
+            <form action="/auth/register/process" method="post" class="setting" id="form">
+                <p>
+                    <label for="user_email" class="label">이메일</labeL>
+                    <input type="email"  name="email" id="user_email" class="input" value="<%=userData.email%>" onchange="ajax_is_email_exist()" placeholder="E-Mail"/>
+                    <span id="email_check_msg" style="font-size: 1rem;"></span>
+                </p>
+                <p>
+                    <label for="user_pw" class="label">새 비밀번호</labeL>
+                    <input type="password"  name="password" id="user_pw" class="input" onchange="is_same()" placeholder="Password"/>
+        
+                    <label for="user_pw" class="label">새 비밀번호 확인</labeL>
+                    <input type="password" name="confirm_password" id="confirm_pw" class="input" onchange="is_same()" placeholder="Confirm password"/>
+                    <span id="pw_check_msg" style="font-size: 1rem;"></span>
+                    
+                </p>
+                <p>
+                    <label for="user_phone" class="label">전화번호 ex) 01012345678</labeL>
+                    <input type="tel"  name="phone" id="user_phone" class="input" placeholder="Phone number"/>
+                </p>
+                <p>
+                    <labeL for="user_nickname" class="label">닉네임</labeL>
+                    <input type="text" name="nick" id="user_nickname" class="input" placeholder="Nickname"/>
+                    <span id="nick_check_msg" style="font-size: 1rem;"></span>
+                </p>
+                <div class="userType">
+                    <% if (userData.userType === 0) { %><%# 탑승자일 경우 %>
+                        <label class="label"><input type="radio" checked disabled/>탑승자</label>
+                        <label class="label"><input type="radio" disabled/>택시기사</label>
+                    <% } else if (userData.userType === 1) { %><%# 택시기사일 경우 %>
+                        <label class="label"><input type="radio" disabled/>탑승자</label>
+                        <label class="label"><input type="radio" checked disabled/>택시기사</label>
+                    <% } %>
+                </div>
+                <div style="color:red; margin-bottom: 1rem; font-size:1.2rem; font-weight:bold;"><%=flashMsg%></div>
+                <input type="submit" id="submit" value="회원정보 변경"/>
+            </form>
+        -->
+            <div class="box"></div>
+        </main>
+        <footer>
+
+        </footer>
+    </body>
+</html>

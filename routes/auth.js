@@ -181,6 +181,26 @@ router.post('/change/password/:encryptedStr', (req, res, next) => {
     });
 });
 
+//Change user setting - page
+router.get('/mysetting', (req, res, next) => {
+    if(!req.user) {
+        req.session.callbackUrl = req.originalUrl;
+        res.redirect("/auth/login");
+        return;
+    }
+
+    let user = req.user;
+    user.get_userData((err, data) => {
+        let userData= {
+            email: data.email,
+            phone: data.phone,
+            nick: data.username,
+            userType: data.user_type
+        }
+        res.render('user_setting', {userData: userData, filter: req.query.filter, flashMsg: ""});
+    });
+});
+
 //Logout - Process
 router.get('/logout', (req, res, next) => {
     delete req.user;

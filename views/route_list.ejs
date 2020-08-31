@@ -12,21 +12,23 @@
     </head>
     <body>
         <header>
-            <h1 class="title" onclick="location.href='/'">가치타자</h1>
+            <h1 class="title">
+                <a href="/">가치타자</a>
+            </h1>
             <!-- 로그인, 내 정보 관리 버튼 -->
             <nav class="box-container">
                 <div class="box"></div>
-                    <ul class="menuList">
-                        <li class="menuBtn">회원설정</li>
+                <ul class="menuList">
+                    <li class="menuBtn"><a href="/auth/mysetting">회원설정</a></li>
 
-                        <%# 로그인 버튼 %>
-                        <% if (userNo) { %>
-                            <li class="menuBtn" onclick="location.href='/auth/logout'">로그아웃</li>
-                        <% } else { %>
-                            <li class="menuBtn" onclick="location.href='/auth/login'">로그인 / 회원가입</li>
-                        <% } %>
+                    <%# 로그인 버튼 %>
+                    <% if (userNo) { %>
+                        <li class="menuBtn"><a href="/auth/logout">로그아웃</a></li>
+                    <% } else { %>
+                        <li class="menuBtn"><a href="/auth/login">로그인 / 회원가입</a></li>
+                    <% } %>
 
-                    </ul>
+                </ul>
                 <div class="box"></div>
             </nav>
         </header>
